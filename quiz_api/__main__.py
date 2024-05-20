@@ -11,6 +11,7 @@ from quiz_api.const import API_PREFIX
 from quiz_api.db import Database
 from quiz_api.log import logger
 from quiz_api.routers.quiz_router import quiz_router
+from quiz_api.routers.single_choice_question_router import single_choice_question_router
 
 
 @asynccontextmanager
@@ -32,6 +33,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="quiz-api", lifespan=lifespan)
 
 app.include_router(quiz_router, prefix=API_PREFIX)
+app.include_router(single_choice_question_router, prefix=API_PREFIX)
 
 
 def start():

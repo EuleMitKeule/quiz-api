@@ -2,7 +2,8 @@ from sqlmodel import Field, SQLModel
 
 
 class QuizBase(SQLModel):
-    pass
+    name: str | None = Field(default=None)
+    isDraft: bool = Field(default=True)
 
 
 class Quiz(QuizBase, table=True):
