@@ -2,8 +2,8 @@ from sqlmodel import Field, SQLModel
 
 
 class QuizBase(SQLModel):
-    name: str | None = Field(default=None)
-    isDraft: bool = Field(default=True)
+    title: str | None = Field(default=None)
+    is_draft: bool = Field(default=True)
 
 
 class Quiz(QuizBase, table=True):

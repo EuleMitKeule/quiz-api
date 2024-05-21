@@ -22,7 +22,6 @@ generate-openapi = "quiz_api.__main__:generate_openapi"
 python = "^3.11"
 fastapi = "^0.111.0"
 sqlmodel = "^0.0.18"
+pyjwt = "^2.8.0"
+bcrypt = "^4.1.3"
 
-[tool.poetry.group.dev.dependencies]
-
-[tool.poetry.group.build.dependencies]

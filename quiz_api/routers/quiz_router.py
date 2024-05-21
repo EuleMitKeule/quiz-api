@@ -1,10 +1,11 @@
 """Quiz router."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from quiz_api.db import db_engine
 from quiz_api.models.quiz import Quiz, QuizCreate, QuizRead
+from quiz_api.security import require_admin
 
 quiz_router = APIRouter(prefix="/quiz", tags=["quiz"])
 
@@ -39,8 +40,9 @@ async def get_quiz(quiz_id: int):
 
 @quiz_router.post(
     "",
-    response_model=QuizCreate,
+    response_model=QuizRead,
     operation_id="create_quiz",
+    dependencies=[Depends(require_admin)],
 )
 async def create_quiz(quiz: QuizCreate):
     """Create a quiz."""
@@ -49,5 +51,6 @@ async def create_quiz(quiz: QuizCreate):
         db_quiz = Quiz.model_validate(quiz)
         session.add(db_quiz)
         session.commit()
+        session.refresh(db_quiz)
 
     return db_quiz
