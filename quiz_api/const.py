@@ -12,6 +12,9 @@ DEFAULT_LOG_PATH = Path("quiz-api.log")
 DEFAULT_LOG_LEVEL = "INFO"
 DEFAULT_DB_URL = "sqlite:///quiz-api.db"
 
+CRYPT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 LOGGING_CONFIG: dict = {
     "version": 1,
     "disable_existing_loggers": False,

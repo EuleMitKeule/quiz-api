@@ -27,6 +27,11 @@ class Config(BaseModel):
     log_level: str = DEFAULT_LOG_LEVEL
     log_path: Path = DEFAULT_LOG_PATH
     db_url: str = DEFAULT_DB_URL
+    secret_key: str
+    admin_username: str
+    admin_password: str
+    test_username: str
+    test_password: str
 
     @classmethod
     def from_file(cls, config_path: str):
