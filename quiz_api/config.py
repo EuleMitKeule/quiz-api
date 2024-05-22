@@ -56,7 +56,7 @@ class Config(BaseModel):
 
 load_dotenv()
 
-config_path: Path = os.getenv("CONFIG_PATH", DEFAULT_CONFIG_PATH)
+config_path: Path = Path(os.getenv("CONFIG_PATH", DEFAULT_CONFIG_PATH))
 
 if config_path.exists():
     config = Config.from_file(config_path)

@@ -1,0 +1,12 @@
+services:
+  quiz-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quiz-api
+    restart: unless-stopped
+    ports:
+      - 14131:14131
+    volumes:
+      - ./appdata/config:/config
+      - /etc/localtime:/etc/localtime:ro

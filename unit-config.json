@@ -1,0 +1,33 @@
+{
+    "listeners": {
+        "*:14131": {
+            "pass": "routes"
+        }
+    },
+    "routes": [
+        {
+            "match": {
+                "uri": [
+                    "/api/*",
+                    "/docs",
+                    "/openapi.json",
+                    "/redoc",
+                    "/metrics"
+                ]
+            },
+            "action": {
+                "pass": "applications/api"
+            }
+        }
+    ],
+    "applications": {
+        "api": {
+            "type": "python 3.11",
+            "user": "www-data",
+            "group": "www-data",
+            "path": "/app/quiz_api",
+            "module": "asgi",
+            "callable": "app"
+        }
+    }
+}

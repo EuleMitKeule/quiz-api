@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run API",
+            "type": "shell",
+            "command": "poetry run api",
+            "problemMatcher": [],
+            "promptOnClose": false,
+            "runOptions": {
+                "instanceLimit": 1,
+            },
+        },
+        {
+            "label": "Generate OpenAPI",
+            "type": "shell",
+            "command": "poetry run generate-openapi",
+            "problemMatcher": [],
+            "promptOnClose": false,
+            "runOptions": {
+                "instanceLimit": 1,
+            },
+        },
+        {
+            "label": "Build And Run Docker",
+            "detail": "Build Docker Image and deploy with docker-compose.",
+            "type": "shell",
+            "command": "docker-compose -f docker-compose.dev.yml up --build",
+            "problemMatcher": [],
+            "promptOnClose": false,
+            "runOptions": {
+                "instanceLimit": 1,
+            },
+        },
+        {
+            "label": "Run Docker",
+            "detail": "Deploy Stack with docker-compose.",
+            "type": "shell",
+            "command": "docker-compose -f docker-compose.dev.yml up",
+            "problemMatcher": [],
+            "promptOnClose": false,
+            "runOptions": {
+                "instanceLimit": 1,
+            },
+        }
+    ]
+}

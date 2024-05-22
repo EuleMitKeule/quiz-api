@@ -1,14 +1,12 @@
 """Constants for the quiz-api application."""
 
-from pathlib import Path
-
 API_PREFIX = "/api"
 
-DEFAULT_CONFIG_PATH = Path("config.yml")
+DEFAULT_CONFIG_PATH = "config.yml"
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8000
 DEFAULT_DEBUG = True
-DEFAULT_LOG_PATH = Path("quiz-api.log")
+DEFAULT_LOG_PATH = "quiz-api.log"
 DEFAULT_LOG_LEVEL = "INFO"
 DEFAULT_DB_URL = "sqlite:///quiz-api.db"
 
