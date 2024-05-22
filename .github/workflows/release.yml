@@ -7,20 +7,66 @@ on:
 
 permissions:
   contents: write
+  packages: write
   pull-requests: write
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  semantic-release:
+  release:
     runs-on: ubuntu-latest
     concurrency: release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: Semantic Release
+        id: semantic-release
         uses: cycjimmy/semantic-release-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if release was created
+        run: exit ${{ steps.semantic-release.outputs.new_release_published == 'false' }}
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create false
+          poetry install --with build
+
+      - name: Set package version
+        run: |
+          poetry version ${{ steps.semantic-release.outputs.new_release_version }}
+
+      - name: Login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            latest
+            ${{ steps.semantic-release.outputs.new_release_version }}
+
+      - name: Build and publish docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
