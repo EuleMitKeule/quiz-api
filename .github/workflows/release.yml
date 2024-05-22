@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry config virtualenvs.create false
-          poetry install --with build
+          poetry install
 
       - name: Set package version
         run: |
