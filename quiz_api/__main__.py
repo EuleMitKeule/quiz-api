@@ -14,7 +14,12 @@ from quiz_api.db import Database, db_engine
 from quiz_api.log import logger
 from quiz_api.models.user import User
 from quiz_api.routers.auth_router import auth_router
+from quiz_api.routers.multiple_choice_option_router import multiple_choice_option_router
+from quiz_api.routers.multiple_choice_question_router import (
+    multiple_choice_question_router,
+)
 from quiz_api.routers.quiz_router import quiz_router
+from quiz_api.routers.single_choice_option_router import single_choice_option_router
 from quiz_api.routers.single_choice_question_router import single_choice_question_router
 from quiz_api.security import get_current_user, get_password_hash, get_user
 
@@ -91,6 +96,21 @@ app.include_router(
 )
 app.include_router(
     single_choice_question_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    multiple_choice_question_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    single_choice_option_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    multiple_choice_option_router,
     prefix=API_PREFIX,
     dependencies=[Depends(get_current_user)],
 )

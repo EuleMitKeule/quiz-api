@@ -2,9 +2,7 @@ from sqlmodel import Field, SQLModel
 
 
 class SingleChoiceOptionBase(SQLModel):
-    question_id: int | None = Field(
-        default=None, foreign_key="single_choice_question.id"
-    )
+    question_id: int | None = Field(default=None)
     text: str | None = Field(default=None)
 
 

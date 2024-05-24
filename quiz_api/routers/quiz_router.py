@@ -54,3 +54,39 @@ async def create_quiz(quiz: QuizCreate):
         session.refresh(db_quiz)
 
     return db_quiz
+
+
+@quiz_router.put(
+    "/{quiz_id}",
+    response_model=QuizRead,
+    operation_id="update_quiz",
+    dependencies=[Depends(require_admin)],
+)
+async def update_quiz(quiz_id: int, quiz: QuizCreate):
+    """Update a quiz by ID."""
+
+    with Session(db_engine) as session:
+        db_quiz = session.get(Quiz, quiz_id)
+        db_quiz = Quiz.model_validate(quiz, db_quiz)
+        session.add(db_quiz)
+        session.commit()
+        session.refresh(db_quiz)
+
+    return db_quiz
+
+
+@quiz_router.delete(
+    "/{quiz_id}",
+    response_model=QuizRead,
+    operation_id="delete_quiz",
+    dependencies=[Depends(require_admin)],
+)
+async def delete_quiz(quiz_id: int):
+    """Delete a quiz by ID."""
+
+    with Session(db_engine) as session:
+        quiz = session.get(Quiz, quiz_id)
+        session.delete(quiz)
+        session.commit()
+
+    return quiz
