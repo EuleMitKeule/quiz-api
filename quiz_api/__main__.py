@@ -19,6 +19,7 @@ from quiz_api.routers.multiple_choice_question_router import (
     multiple_choice_question_router,
 )
 from quiz_api.routers.quiz_router import quiz_router
+from quiz_api.routers.result_router import result_router
 from quiz_api.routers.single_choice_option_router import single_choice_option_router
 from quiz_api.routers.single_choice_question_router import single_choice_question_router
 from quiz_api.security import get_current_user, get_password_hash, get_user
@@ -111,6 +112,11 @@ app.include_router(
 )
 app.include_router(
     multiple_choice_option_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    result_router,
     prefix=API_PREFIX,
     dependencies=[Depends(get_current_user)],
 )
