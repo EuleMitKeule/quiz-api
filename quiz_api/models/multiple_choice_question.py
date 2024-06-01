@@ -4,6 +4,7 @@ from sqlmodel import Field, SQLModel
 class MultipleChoiceQuestionBase(SQLModel):
     quiz_id: int | None = Field(default=None, foreign_key="quiz.id")
     text: str | None = Field(default=None)
+    index: int
 
 
 class MultipleChoiceQuestion(MultipleChoiceQuestionBase, table=True):

@@ -6,6 +6,7 @@ class SingleChoiceQuestionBase(SQLModel):
     corrent_option_id: int | None = Field(default=None)
     selected_option_id: int | None = Field(default=None)
     text: str | None = Field(default=None)
+    index: int
 
 
 class SingleChoiceQuestion(SingleChoiceQuestionBase, table=True):
