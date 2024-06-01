@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlmodel import Field, SQLModel
 
 
@@ -10,6 +12,7 @@ class ResultBase(SQLModel):
 class Result(ResultBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int | None = Field(default=None)
+    created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 
 class ResultCreate(ResultBase):
@@ -19,3 +22,4 @@ class ResultCreate(ResultBase):
 class ResultRead(ResultBase):
     id: int
     user_id: int | None
+    created_at: datetime
