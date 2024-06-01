@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from quiz_api.db import db_engine
-from quiz_api.models.result import Result, ResultCreate, ResultRead
-from quiz_api.models.user import User
+from quiz_api.models import Result, ResultCreate, ResultRead
+from quiz_api.models import User
 from quiz_api.security import get_current_user
 
 result_router = APIRouter(prefix="/result", tags=["result"])

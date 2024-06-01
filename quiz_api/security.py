@@ -11,8 +11,8 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from quiz_api.config import config
 from quiz_api.const import API_PREFIX, CRYPT_ALGORITHM
 from quiz_api.db import db_engine
-from quiz_api.models.token import TokenData
-from quiz_api.models.user import User
+from quiz_api.models import TokenData
+from quiz_api.models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_PREFIX}/token")
 

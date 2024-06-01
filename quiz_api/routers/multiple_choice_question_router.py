@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from quiz_api.db import db_engine
-from quiz_api.models.multiple_choice_question import (
+from quiz_api.models import (
     MultipleChoiceQuestion,
     MultipleChoiceQuestionCreate,
     MultipleChoiceQuestionRead,

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from quiz_api.db import db_engine
-from quiz_api.models.quiz import Quiz, QuizCreate, QuizRead
+from quiz_api.models import Quiz, QuizCreate, QuizRead
 from quiz_api.security import require_admin
 
 quiz_router = APIRouter(prefix="/quiz", tags=["quiz"])

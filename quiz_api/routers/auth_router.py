@@ -6,8 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from quiz_api.const import ACCESS_TOKEN_EXPIRE_MINUTES
-from quiz_api.models.token import Token
-from quiz_api.models.user import User, UserRead
+from quiz_api.models import Token
+from quiz_api.models import User, UserRead
 from quiz_api.security import (
     authenticate_user,
     create_access_token,
