@@ -55,7 +55,7 @@ class GapTextQuestionBase(QuestionBase):
     pass
 
 
-class GapTextSubQuestionBase(SQLModel):
+class GapTextSubQuestionBase(SQLModel, HasIndex):
     question_id: int | None = Field(default=None, foreign_key="gap_text_question.id")
 
 
