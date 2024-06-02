@@ -31,7 +31,7 @@ class ResultBase(SQLModel):
     total: int | None = Field(default=None)
 
 
-class QuestionBase(HasText, HasIndex):
+class QuestionBase(HasTitle, HasText, HasIndex):
     quiz_id: int | None = Field(default=None, foreign_key="quiz.id")
 
 
@@ -55,7 +55,7 @@ class GapTextQuestionBase(QuestionBase):
     pass
 
 
-class GapTextSubQuestionBase(SQLModel, HasIndex):
+class GapTextSubQuestionBase(HasIndex):
     question_id: int | None = Field(default=None, foreign_key="gap_text_question.id")
 
 
@@ -96,17 +96,21 @@ class Quiz(QuizBase, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     single_choice_questions: List["SingleChoiceQuestion"] = Relationship(
-        back_populates="quiz"
+        back_populates="quiz", sa_relationship_kwargs={"lazy": "joined"}
     )
     multiple_choice_questions: List["MultipleChoiceQuestion"] = Relationship(
-        back_populates="quiz"
+        back_populates="quiz", sa_relationship_kwargs={"lazy": "joined"}
     )
     open_questions: List["OpenQuestion"] = Relationship(back_populates="quiz")
     assignment_questions: List["AssignmentQuestion"] = Relationship(
-        back_populates="quiz"
+        back_populates="quiz", sa_relationship_kwargs={"lazy": "joined"}
     )
-    gap_text_questions: List["GapTextQuestion"] = Relationship(back_populates="quiz")
-    results: List["Result"] = Relationship(back_populates="quiz")
+    gap_text_questions: List["GapTextQuestion"] = Relationship(
+        back_populates="quiz", sa_relationship_kwargs={"lazy": "joined"}
+    )
+    results: List["Result"] = Relationship(
+        back_populates="quiz", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class Result(ResultBase, table=True):
@@ -114,8 +118,12 @@ class Result(ResultBase, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     user_id: int | None = Field(default=None, foreign_key="user.id")
-    quiz: "Quiz" = Relationship(back_populates="results")
-    user: "User" = Relationship(back_populates="results")
+    quiz: "Quiz" = Relationship(
+        back_populates="results", sa_relationship_kwargs={"lazy": "joined"}
+    )
+    user: "User" = Relationship(
+        back_populates="results", sa_relationship_kwargs={"lazy": "joined"}
+    )
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 
@@ -123,9 +131,12 @@ class SingleChoiceQuestion(SingleChoiceQuestionBase, table=True):
     __tablename__ = "single_choice_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    quiz: "Quiz" = Relationship(back_populates="single_choice_questions")
+    quiz: "Quiz" = Relationship(
+        back_populates="single_choice_questions",
+        sa_relationship_kwargs={"lazy": "joined"},
+    )
     single_choice_options: List["SingleChoiceOption"] = Relationship(
-        back_populates="question"
+        back_populates="question", sa_relationship_kwargs={"lazy": "joined"}
     )
 
 
@@ -133,9 +144,12 @@ class MultipleChoiceQuestion(MultipleChoiceQuestionBase, table=True):
     __tablename__ = "multiple_choice_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    quiz: "Quiz" = Relationship(back_populates="multiple_choice_questions")
+    quiz: "Quiz" = Relationship(
+        back_populates="multiple_choice_questions",
+        sa_relationship_kwargs={"lazy": "joined"},
+    )
     multiple_choice_options: List["MultipleChoiceOption"] = Relationship(
-        back_populates="question"
+        back_populates="question", sa_relationship_kwargs={"lazy": "joined"}
     )
 
 
@@ -143,17 +157,23 @@ class OpenQuestion(OpenQuestionBase, table=True):
     __tablename__ = "open_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    quiz: "Quiz" = Relationship(back_populates="open_questions")
-    open_options: List["OpenOption"] = Relationship(back_populates="question")
+    quiz: "Quiz" = Relationship(
+        back_populates="open_questions", sa_relationship_kwargs={"lazy": "joined"}
+    )
+    open_options: List["OpenOption"] = Relationship(
+        back_populates="question", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class AssignmentQuestion(AssignmentQuestionBase, table=True):
     __tablename__ = "assignment_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    quiz: "Quiz" = Relationship(back_populates="assignment_questions")
+    quiz: "Quiz" = Relationship(
+        back_populates="assignment_questions", sa_relationship_kwargs={"lazy": "joined"}
+    )
     assignment_options: List["AssignmentOption"] = Relationship(
-        back_populates="question"
+        back_populates="question", sa_relationship_kwargs={"lazy": "joined"}
     )
 
 
@@ -161,9 +181,11 @@ class GapTextQuestion(GapTextQuestionBase, table=True):
     __tablename__ = "gap_text_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    quiz: "Quiz" = Relationship(back_populates="gap_text_questions")
+    quiz: "Quiz" = Relationship(
+        back_populates="gap_text_questions", sa_relationship_kwargs={"lazy": "joined"}
+    )
     gap_text_sub_questions: List["GapTextSubQuestion"] = Relationship(
-        back_populates="question"
+        back_populates="question", sa_relationship_kwargs={"lazy": "joined"}
     )
 
 
@@ -171,9 +193,12 @@ class GapTextSubQuestion(GapTextSubQuestionBase, table=True):
     __tablename__ = "gap_text_sub_question"
 
     id: int | None = Field(default=None, primary_key=True)
-    question: "GapTextQuestion" = Relationship(back_populates="gap_text_sub_questions")
+    question: "GapTextQuestion" = Relationship(
+        back_populates="gap_text_sub_questions",
+        sa_relationship_kwargs={"lazy": "joined"},
+    )
     gap_text_options: List["GapTextOption"] = Relationship(
-        back_populates="sub_question"
+        back_populates="sub_question", sa_relationship_kwargs={"lazy": "joined"}
     )
 
 
@@ -182,7 +207,8 @@ class SingleChoiceOption(SingleChoiceOptionBase, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     question: "SingleChoiceQuestion" = Relationship(
-        back_populates="single_choice_options"
+        back_populates="single_choice_options",
+        sa_relationship_kwargs={"lazy": "joined"},
     )
 
 
@@ -191,7 +217,8 @@ class MultipleChoiceOption(MultipleChoiceOptionBase, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     question: "MultipleChoiceQuestion" = Relationship(
-        back_populates="multiple_choice_options"
+        back_populates="multiple_choice_options",
+        sa_relationship_kwargs={"lazy": "joined"},
     )
 
 
@@ -199,21 +226,27 @@ class OpenOption(OpenOptionBase, table=True):
     __tablename__ = "open_option"
 
     id: int | None = Field(default=None, primary_key=True)
-    question: "OpenQuestion" = Relationship(back_populates="open_options")
+    question: "OpenQuestion" = Relationship(
+        back_populates="open_options", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class AssignmentOption(AssignmentOptionBase, table=True):
     __tablename__ = "assignment_option"
 
     id: int | None = Field(default=None, primary_key=True)
-    question: "AssignmentQuestion" = Relationship(back_populates="assignment_options")
+    question: "AssignmentQuestion" = Relationship(
+        back_populates="assignment_options", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class GapTextOption(GapTextOptionBase, table=True):
     __tablename__ = "gap_text_option"
 
     id: int | None = Field(default=None, primary_key=True)
-    sub_question: "GapTextSubQuestion" = Relationship(back_populates="gap_text_options")
+    sub_question: "GapTextSubQuestion" = Relationship(
+        back_populates="gap_text_options", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class User(UserBase, table=True):
@@ -221,7 +254,9 @@ class User(UserBase, table=True):
 
     id: int = Field(default=None, primary_key=True)
     hashed_password: str
-    results: List["Result"] = Relationship(back_populates="user")
+    results: List["Result"] = Relationship(
+        back_populates="user", sa_relationship_kwargs={"lazy": "joined"}
+    )
 
 
 class Token(BaseModel):

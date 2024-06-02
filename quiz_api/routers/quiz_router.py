@@ -19,7 +19,7 @@ async def get_quizzes():
     """Get all quizzes."""
 
     with Session(db_engine) as session:
-        quizzes = session.exec(select(Quiz)).all()
+        quizzes = session.exec(select(Quiz)).unique().all()
 
     return quizzes
 
