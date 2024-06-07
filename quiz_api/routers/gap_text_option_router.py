@@ -71,9 +71,12 @@ async def update_gap_text_option(
 
     with Session(db_engine) as session:
         db_gap_text_option = session.get(GapTextOption, gap_text_option_id)
-        db_gap_text_option = GapTextOption.model_validate(
-            gap_text_option, db_gap_text_option
-        )
+
+        db_gap_text_option.text = gap_text_option.text
+        db_gap_text_option.index = gap_text_option.index
+        db_gap_text_option.is_correct = gap_text_option.is_correct
+        db_gap_text_option.sub_question_id = gap_text_option.sub_question_id
+
         session.add(db_gap_text_option)
         session.commit()
         session.refresh(db_gap_text_option)

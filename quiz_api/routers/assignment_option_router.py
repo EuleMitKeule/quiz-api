@@ -73,9 +73,12 @@ async def update_assignment_option(
 
     with Session(db_engine) as session:
         db_assignment_option = session.get(AssignmentOption, assignment_option_id)
-        db_assignment_option = AssignmentOption.model_validate(
-            assignment_option, db_assignment_option
-        )
+
+        db_assignment_option.text = assignment_option.text
+        db_assignment_option.correct_index = assignment_option.correct_index
+        db_assignment_option.index = assignment_option.index
+        db_assignment_option.question_id = assignment_option.question_id
+
         session.add(db_assignment_option)
         session.commit()
         session.refresh(db_assignment_option)

@@ -79,9 +79,11 @@ async def update_gap_text_sub_question(
         db_gap_text_sub_question = session.get(
             GapTextSubQuestion, gap_text_sub_question_id
         )
-        db_gap_text_sub_question = GapTextSubQuestion.model_validate(
-            gap_text_sub_question, db_gap_text_sub_question
-        )
+
+        db_gap_text_sub_question.text = gap_text_sub_question.text
+        db_gap_text_sub_question.index = gap_text_sub_question.index
+        db_gap_text_sub_question.quiz_id = gap_text_sub_question.quiz_id
+
         session.add(db_gap_text_sub_question)
         session.commit()
         session.refresh(db_gap_text_sub_question)

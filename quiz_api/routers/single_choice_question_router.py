@@ -25,7 +25,7 @@ async def get_single_choice_questions():
     """Get all single choice questions."""
 
     with Session(db_engine) as session:
-        questions = session.exec(select(SingleChoiceQuestion)).all()
+        questions = session.exec(select(SingleChoiceQuestion)).unique().all()
 
     return questions
 
@@ -74,9 +74,16 @@ async def update_single_choice_question(
 
     with Session(db_engine) as session:
         db_question = session.get(SingleChoiceQuestion, question_id)
-        db_question = SingleChoiceQuestion.model_validate(question, db_question)
+
+        db_question.title = question.title
+        db_question.text = question.text
+        db_question.index = question.index
+        db_question.correct_index = question.correct_index
+        db_question.quiz_id = question.quiz_id
+
         session.add(db_question)
         session.commit()
+        session.refresh(db_question)
 
     return db_question
 

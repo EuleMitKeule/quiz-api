@@ -50,13 +50,14 @@ async def get_single_choice_option(option_id: int):
     operation_id="create_single_choice_option",
     dependencies=[Depends(require_admin)],
 )
-async def create_quiz(option: SingleChoiceOptionCreate):
+async def create_single_choice_option(option: SingleChoiceOptionCreate):
     """Create a single choice option."""
 
     with Session(db_engine) as session:
         db_option = SingleChoiceOption.model_validate(option)
         session.add(db_option)
         session.commit()
+        session.refresh(db_option)
 
     return db_option
 
@@ -72,9 +73,14 @@ async def update_single_choice_option(option_id: int, option: SingleChoiceOption
 
     with Session(db_engine) as session:
         db_option = session.get(SingleChoiceOption, option_id)
-        db_option = SingleChoiceOption.model_validate(option, db_option)
+
+        db_option.text = option.text
+        db_option.question_id = option.question_id
+        db_option.index = option.index
+
         session.add(db_option)
         session.commit()
+        session.refresh(db_option)
 
     return db_option
 

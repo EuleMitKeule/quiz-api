@@ -69,7 +69,11 @@ async def update_open_option(open_option_id: int, open_option: OpenOption):
 
     with Session(db_engine) as session:
         db_open_option = session.get(OpenOption, open_option_id)
-        db_open_option = OpenOption.model_validate(open_option, db_open_option)
+
+        db_open_option.text = open_option.text
+        db_open_option.index = open_option.index
+        db_open_option.question_id = open_option.question_id
+
         session.add(db_open_option)
         session.commit()
         session.refresh(db_open_option)

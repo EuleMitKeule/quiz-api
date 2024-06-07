@@ -73,7 +73,15 @@ async def update_assignment_question(
 
     with Session(db_engine) as session:
         db_assignment_question = session.get(AssignmentQuestion, assignment_question_id)
-        AssignmentQuestion.model_validate(assignment_question, db_assignment_question)
+
+        db_assignment_question.title = assignment_question.title
+        db_assignment_question.text = assignment_question.text
+        db_assignment_question.index = assignment_question.index
+        db_assignment_question.quiz_id = assignment_question.quiz_id
+
+        session.add(db_assignment_question)
+        session.commit()
+        session.refresh(db_assignment_question)
 
     return db_assignment_question
 

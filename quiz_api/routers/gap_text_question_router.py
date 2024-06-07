@@ -73,9 +73,12 @@ async def update_gap_text_question(
 
     with Session(db_engine) as session:
         db_gap_text_question = session.get(GapTextQuestion, gap_text_question_id)
+
+        db_gap_text_question.title = gap_text_question.title
         db_gap_text_question.text = gap_text_question.text
-        db_gap_text_question.gaps = gap_text_question.gaps
-        db_gap_text_question.correct_answers = gap_text_question.correct_answers
+        db_gap_text_question.index = gap_text_question.index
+        db_gap_text_question.quiz_id = gap_text_question.quiz_id
+
         session.add(db_gap_text_question)
         session.commit()
         session.refresh(db_gap_text_question)

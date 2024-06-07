@@ -67,7 +67,12 @@ async def update_open_question(open_question_id: int, open_question: OpenQuestio
 
     with Session(db_engine) as session:
         db_open_question = session.get(OpenQuestion, open_question_id)
-        OpenQuestion.model_validate(open_question, db_open_question)
+
+        db_open_question.title = open_question.title
+        db_open_question.text = open_question.text
+        db_open_question.index = open_question.index
+        db_open_question.quiz_id = open_question.quiz_id
+
         session.add(db_open_question)
         session.commit()
         session.refresh(db_open_question)

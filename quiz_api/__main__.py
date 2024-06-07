@@ -13,20 +13,25 @@ from quiz_api.const import API_PREFIX
 from quiz_api.db import Database, db_engine
 from quiz_api.log import logger
 from quiz_api.models import User
+from quiz_api.routers.assignment_answer_router import assignment_answer_router
 from quiz_api.routers.assignment_option_router import assignment_option_router
 from quiz_api.routers.assignment_question_router import assignment_question_router
 from quiz_api.routers.auth_router import auth_router
+from quiz_api.routers.gap_text_answer_router import gap_text_answer_router
 from quiz_api.routers.gap_text_option_router import gap_text_option_router
 from quiz_api.routers.gap_text_question_router import gap_text_question_router
 from quiz_api.routers.gap_text_sub_question_router import gap_text_sub_question_router
+from quiz_api.routers.multiple_choice_answer_router import multiple_choice_answer_router
 from quiz_api.routers.multiple_choice_option_router import multiple_choice_option_router
 from quiz_api.routers.multiple_choice_question_router import (
     multiple_choice_question_router,
 )
+from quiz_api.routers.open_answer_router import open_answer_router
 from quiz_api.routers.open_option_router import open_option_router
 from quiz_api.routers.open_question_router import open_question_router
 from quiz_api.routers.quiz_router import quiz_router
 from quiz_api.routers.result_router import result_router
+from quiz_api.routers.single_choice_answer_router import single_choice_answer_router
 from quiz_api.routers.single_choice_option_router import single_choice_option_router
 from quiz_api.routers.single_choice_question_router import single_choice_question_router
 from quiz_api.security import get_current_user, get_password_hash, get_user
@@ -155,6 +160,29 @@ app.include_router(
 )
 app.include_router(
     gap_text_option_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    single_choice_answer_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    multiple_choice_answer_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    open_answer_router, prefix=API_PREFIX, dependencies=[Depends(get_current_user)]
+)
+app.include_router(
+    gap_text_answer_router,
+    prefix=API_PREFIX,
+    dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    assignment_answer_router,
     prefix=API_PREFIX,
     dependencies=[Depends(get_current_user)],
 )

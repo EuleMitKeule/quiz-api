@@ -1,11 +1,31 @@
 """Quiz router."""
 
+from datetime import UTC, datetime
+
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from quiz_api.db import db_engine
-from quiz_api.models import Quiz, QuizCreate, QuizRead
-from quiz_api.security import require_admin
+from quiz_api.models import (
+    Answers,
+    AssignmentAnswer,
+    AssignmentQuestion,
+    GapTextAnswer,
+    GapTextSubQuestion,
+    MultipleChoiceAnswer,
+    MultipleChoiceQuestion,
+    OpenAnswer,
+    OpenQuestion,
+    Quiz,
+    QuizCreate,
+    QuizRead,
+    Result,
+    ResultRead,
+    SingleChoiceAnswer,
+    SingleChoiceQuestion,
+    User,
+)
+from quiz_api.security import get_current_user, require_admin
 
 quiz_router = APIRouter(prefix="/quiz", tags=["quiz"])
 
@@ -67,7 +87,9 @@ async def update_quiz(quiz_id: int, quiz: QuizCreate):
 
     with Session(db_engine) as session:
         db_quiz = session.get(Quiz, quiz_id)
-        db_quiz = Quiz.model_validate(quiz, db_quiz)
+
+        db_quiz.title = quiz.title
+
         session.add(db_quiz)
         session.commit()
         session.refresh(db_quiz)
@@ -90,3 +112,165 @@ async def delete_quiz(quiz_id: int):
         session.commit()
 
     return quiz
+
+
+@quiz_router.get(
+    "/{quiz_id}/results",
+    response_model=list[ResultRead],
+    operation_id="get_quiz_results",
+)
+async def get_results(quiz_id: int, current_user: User = Depends(get_current_user)):
+    """Get all results for a quiz."""
+
+    with Session(db_engine) as session:
+        results = (
+            session.exec(
+                select(Result).filter(
+                    Result.quiz_id == quiz_id and Result.user_id == current_user.id
+                )
+            )
+            .unique()
+            .all()
+        )
+
+    return results
+
+
+@quiz_router.post(
+    "/{quiz_id}/submit",
+    response_model=ResultRead,
+    operation_id="submit_quiz",
+)
+async def submit_quiz(
+    quiz_id: int, answers: Answers, current_user: User = Depends(get_current_user)
+):
+    """Finish a quiz."""
+
+    with Session(db_engine) as session:
+        result = Result(
+            quiz_id=quiz_id, user_id=current_user.id, created_at=datetime.now(UTC)
+        )
+
+        session.add(result)
+        session.commit()
+        session.refresh(result)
+
+    with Session(db_engine) as session:
+        result = session.get(Result, result.id)
+
+        for single_choice_answer in answers.single_choice_answers:
+            single_choice_question = session.get(
+                SingleChoiceQuestion, single_choice_answer.question_id
+            )
+
+            db_single_choice_answer = SingleChoiceAnswer(
+                selected_index=single_choice_answer.selected_index,
+                result_id=result.id,
+                question_id=single_choice_question.id,
+            )
+
+            if (
+                single_choice_answer.selected_index
+                == single_choice_question.correct_index
+            ):
+                result.score += 1
+                db_single_choice_answer.score = 1
+
+            db_single_choice_answer.max_score = 1
+            result.max_score += 1
+
+            session.add(db_single_choice_answer)
+
+        for multiple_choice_answer in answers.multiple_choice_answers:
+            multiple_choice_question = session.get(
+                MultipleChoiceQuestion, multiple_choice_answer.question_id
+            )
+
+            db_multiple_choice_answer = MultipleChoiceAnswer(
+                selected_indices=multiple_choice_answer.selected_indices,
+                result_id=result.id,
+                question_id=multiple_choice_question.id,
+            )
+
+            if set(multiple_choice_answer.selected_indexes) == set(
+                multiple_choice_question.correct_indexes
+            ):
+                result.score += 1
+                db_multiple_choice_answer.score = 1
+
+            db_multiple_choice_answer.max_score = 1
+            result.max_score += 1
+
+            session.add(db_multiple_choice_answer)
+
+        for open_answer in answers.open_answers:
+            open_question = session.get(OpenQuestion, open_answer.question_id)
+
+            db_open_answer = OpenAnswer(
+                text=open_answer.text,
+                result_id=result.id,
+                question_id=open_question.id,
+            )
+
+            if all(
+                [
+                    open_option.text.lower() in open_answer.text.lower()
+                    for open_option in open_question.open_options
+                ]
+            ):
+                result.score += 1
+                db_open_answer.score = 1
+
+            db_open_answer.max_score = 1
+            result.max_score += 1
+
+            session.add(db_open_answer)
+
+        for gap_text_answer in answers.gap_text_answers:
+            gap_text_question = session.get(
+                GapTextSubQuestion, gap_text_answer.question_id
+            )
+
+            db_gap_text_answer = GapTextAnswer(
+                selected_indices=gap_text_answer.selected_indices,
+                result_id=result.id,
+                question_id=gap_text_question.id,
+            )
+
+            if gap_text_answer.selected_indices == gap_text_question.correct_indices:
+                result.score += 1
+                db_gap_text_answer.score = 1
+
+            db_gap_text_answer.max_score = 1
+            result.max_score += 1
+
+            session.add(db_gap_text_answer)
+
+        for assignment_answer in answers.assignment_answers:
+            assignment_question = session.get(
+                AssignmentQuestion, assignment_answer.question_id
+            )
+
+            db_assignment_answer = AssignmentAnswer(
+                selected_indices=assignment_answer.selected_indices,
+                result_id=result.id,
+                question_id=assignment_question.id,
+            )
+
+            if (
+                assignment_answer.selected_indices
+                == assignment_question.correct_indices
+            ):
+                result.score += 1
+                db_assignment_answer.score = 1
+
+            db_assignment_answer.max_score = 1
+            result.max_score += 1
+
+            session.add(db_assignment_answer)
+
+        session.add(result)
+        session.commit()
+        session.refresh(result)
+
+        return result

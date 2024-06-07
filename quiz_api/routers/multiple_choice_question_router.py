@@ -74,8 +74,15 @@ async def update_multiple_choice_question(
 
     with Session(db_engine) as session:
         db_question = session.get(MultipleChoiceQuestion, question_id)
-        db_question = MultipleChoiceQuestion.model_validate(question, db_question)
+
+        db_question.title = question.title
+        db_question.text = question.text
+        db_question.index = question.index
+        db_question.quiz_id = question.quiz_id
+
+        session.add(db_question)
         session.commit()
+        session.refresh(db_question)
 
     return db_question
 
