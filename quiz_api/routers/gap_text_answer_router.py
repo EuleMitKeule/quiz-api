@@ -44,7 +44,7 @@ async def get_gap_text_answer(answer_id: int):
 
 @gap_text_answer_router.post(
     "",
-    response_model=GapTextAnswerCreate,
+    response_model=GapTextAnswerRead,
     operation_id="create_gap_text_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -61,7 +61,7 @@ async def create_gap_text_answer(answer: GapTextAnswerCreate):
 
 @gap_text_answer_router.put(
     "/{answer_id}",
-    response_model=GapTextAnswerCreate,
+    response_model=GapTextAnswerRead,
     operation_id="update_gap_text_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -77,13 +77,14 @@ async def update_gap_text_answer(answer_id: int, answer: GapTextAnswerCreate):
 
         session.add(db_answer)
         session.commit()
+        session.refresh(db_answer)
 
     return db_answer
 
 
 @gap_text_answer_router.delete(
     "/{answer_id}",
-    response_model=GapTextAnswerRead,
+    response_model=int,
     operation_id="delete_gap_text_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -95,4 +96,4 @@ async def delete_gap_text_answer(answer_id: int):
         session.delete(answer)
         session.commit()
 
-    return answer
+    return answer_id

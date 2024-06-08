@@ -83,7 +83,7 @@ async def update_open_option(open_option_id: int, open_option: OpenOption):
 
 @open_option_router.delete(
     "/{open_option_id}",
-    response_model=OpenOptionRead,
+    response_model=int,
     operation_id="delete_open_option",
     dependencies=[Depends(require_admin)],
 )
@@ -95,4 +95,4 @@ async def delete_open_option(open_option_id: int):
         session.delete(open_option)
         session.commit()
 
-    return open_option
+    return open_option_id

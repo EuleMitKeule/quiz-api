@@ -46,7 +46,7 @@ async def get_multiple_choice_question(question_id: int):
 
 @multiple_choice_question_router.post(
     "",
-    response_model=MultipleChoiceQuestionCreate,
+    response_model=MultipleChoiceQuestionRead,
     operation_id="create_multiple_choice_question",
     dependencies=[Depends(require_admin)],
 )
@@ -89,6 +89,7 @@ async def update_multiple_choice_question(
 
 @multiple_choice_question_router.delete(
     "/{question_id}",
+    response_model=int,
     operation_id="delete_multiple_choice_question",
     dependencies=[Depends(require_admin)],
 )
@@ -100,4 +101,4 @@ async def delete_multiple_choice_question(question_id: int):
         session.delete(question)
         session.commit()
 
-    return {"message": "Question deleted successfully."}
+    return question_id

@@ -46,7 +46,7 @@ async def get_multiple_choice_option(option_id: int):
 
 @multiple_choice_option_router.post(
     "",
-    response_model=MultipleChoiceOptionCreate,
+    response_model=MultipleChoiceOptionRead,
     operation_id="create_multiple_choice_option",
     dependencies=[Depends(require_admin)],
 )
@@ -57,13 +57,14 @@ async def create_quiz(option: MultipleChoiceOptionCreate):
         db_option = MultipleChoiceOption.model_validate(option)
         session.add(db_option)
         session.commit()
+        session.refresh(db_option)
 
     return db_option
 
 
 @multiple_choice_option_router.put(
     "/{option_id}",
-    response_model=MultipleChoiceOptionCreate,
+    response_model=MultipleChoiceOptionRead,
     operation_id="update_multiple_choice_option",
     dependencies=[Depends(require_admin)],
 )
@@ -89,7 +90,7 @@ async def update_multiple_choice_option(
 
 @multiple_choice_option_router.delete(
     "/{option_id}",
-    response_model=MultipleChoiceOptionRead,
+    response_model=int,
     operation_id="delete_multiple_choice_option",
     dependencies=[Depends(require_admin)],
 )
@@ -101,4 +102,4 @@ async def delete_multiple_choice_option(option_id: int):
         session.delete(option)
         session.commit()
 
-    return option
+    return option_id

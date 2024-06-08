@@ -46,7 +46,7 @@ async def get_multiple_choice_answer(answer_id: int):
 
 @multiple_choice_answer_router.post(
     "",
-    response_model=MultipleChoiceAnswerCreate,
+    response_model=MultipleChoiceAnswerRead,
     operation_id="create_multiple_choice_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -57,13 +57,14 @@ async def create_multiple_choice_answer(answer: MultipleChoiceAnswerCreate):
         db_answer = MultipleChoiceAnswer.model_validate(answer)
         session.add(db_answer)
         session.commit()
+        session.refresh(db_answer)
 
     return db_answer
 
 
 @multiple_choice_answer_router.put(
     "/{answer_id}",
-    response_model=MultipleChoiceAnswerCreate,
+    response_model=MultipleChoiceAnswerRead,
     operation_id="update_multiple_choice_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -88,7 +89,7 @@ async def update_multiple_choice_answer(
 
 @multiple_choice_answer_router.delete(
     "/{answer_id}",
-    response_model=MultipleChoiceAnswerRead,
+    response_model=int,
     operation_id="delete_multiple_choice_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -100,4 +101,4 @@ async def delete_multiple_choice_answer(answer_id: int):
         session.delete(answer)
         session.commit()
 
-    return answer
+    return answer_id

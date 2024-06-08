@@ -99,7 +99,7 @@ async def update_quiz(quiz_id: int, quiz: QuizCreate):
 
 @quiz_router.delete(
     "/{quiz_id}",
-    response_model=QuizRead,
+    response_model=int,
     operation_id="delete_quiz",
     dependencies=[Depends(require_admin)],
 )
@@ -108,10 +108,32 @@ async def delete_quiz(quiz_id: int):
 
     with Session(db_engine) as session:
         quiz = session.get(Quiz, quiz_id)
-        session.delete(quiz)
-        session.commit()
 
-    return quiz
+        results = (
+            session.exec(select(Result).filter(Result.quiz_id == quiz_id))
+            .unique()
+            .all()
+        )
+
+        for result in results:
+            for single_choice_answer in result.single_choice_answers:
+                session.delete(single_choice_answer)
+            for multiple_choice_answer in result.multiple_choice_answers:
+                session.delete(multiple_choice_answer)
+            for open_answer in result.open_answers:
+                session.delete(open_answer)
+            for gap_text_answer in result.gap_text_answers:
+                session.delete(gap_text_answer)
+            for assignment_answer in result.assignment_answers:
+                session.delete(assignment_answer)
+
+            session.delete(result)
+
+        if quiz is not None:
+            session.delete(quiz)
+            session.commit()
+
+    return quiz_id
 
 
 @quiz_router.get(

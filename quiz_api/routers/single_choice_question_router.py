@@ -46,7 +46,7 @@ async def get_single_choice_question(question_id: int):
 
 @single_choice_question_router.post(
     "",
-    response_model=SingleChoiceQuestionCreate,
+    response_model=SingleChoiceQuestionRead,
     operation_id="create_single_choice_question",
     dependencies=[Depends(require_admin)],
 )
@@ -57,6 +57,7 @@ async def create_quiz(question: SingleChoiceQuestionCreate):
         db_question = SingleChoiceQuestion.model_validate(question)
         session.add(db_question)
         session.commit()
+        session.refresh(db_question)
 
     return db_question
 
@@ -90,7 +91,7 @@ async def update_single_choice_question(
 
 @single_choice_question_router.delete(
     "/{question_id}",
-    response_model=SingleChoiceQuestionRead,
+    response_model=int,
     operation_id="delete_single_choice_question",
     dependencies=[Depends(require_admin)],
 )
@@ -102,4 +103,4 @@ async def delete_single_choice_question(question_id: int):
         session.delete(question)
         session.commit()
 
-    return question
+    return question_id

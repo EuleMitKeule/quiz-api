@@ -82,7 +82,7 @@ async def update_open_question(open_question_id: int, open_question: OpenQuestio
 
 @open_question_router.delete(
     "/{open_question_id}",
-    response_model=OpenQuestionRead,
+    response_model=int,
     operation_id="delete_open_question",
     dependencies=[Depends(require_admin)],
 )
@@ -94,4 +94,4 @@ async def delete_open_question(open_question_id: int):
         session.delete(open_question)
         session.commit()
 
-    return open_question
+    return open_question_id

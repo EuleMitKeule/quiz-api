@@ -46,7 +46,7 @@ async def get_single_choice_answer(answer_id: int):
 
 @single_choice_answer_router.post(
     "",
-    response_model=SingleChoiceAnswerCreate,
+    response_model=SingleChoiceAnswerRead,
     operation_id="create_single_choice_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -57,6 +57,7 @@ async def create_single_choice_answer(answer: SingleChoiceAnswerCreate):
         db_answer = SingleChoiceAnswer.model_validate(answer)
         session.add(db_answer)
         session.commit()
+        session.refresh(db_answer)
 
     return db_answer
 
@@ -86,7 +87,7 @@ async def update_single_choice_answer(answer_id: int, answer: SingleChoiceAnswer
 
 @single_choice_answer_router.delete(
     "/{answer_id}",
-    response_model=SingleChoiceAnswerRead,
+    response_model=int,
     operation_id="delete_single_choice_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -98,4 +99,4 @@ async def delete_single_choice_answer(answer_id: int):
         session.delete(answer)
         session.commit()
 
-    return answer
+    return answer_id

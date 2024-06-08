@@ -44,7 +44,7 @@ async def get_open_answer(answer_id: int):
 
 @open_answer_router.post(
     "",
-    response_model=OpenAnswerCreate,
+    response_model=OpenAnswerRead,
     operation_id="create_open_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -55,13 +55,14 @@ async def create_open_answer(answer: OpenAnswerCreate):
         db_answer = OpenAnswer.model_validate(answer)
         session.add(db_answer)
         session.commit()
+        session.refresh(db_answer)
 
     return db_answer
 
 
 @open_answer_router.put(
     "/{answer_id}",
-    response_model=OpenAnswerCreate,
+    response_model=OpenAnswerRead,
     operation_id="update_open_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -84,7 +85,7 @@ async def update_open_answer(answer_id: int, answer: OpenAnswerCreate):
 
 @open_answer_router.delete(
     "/{answer_id}",
-    response_model=OpenAnswerRead,
+    response_model=int,
     operation_id="delete_open_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -96,4 +97,4 @@ async def delete_open_answer(answer_id: int):
         session.delete(answer)
         session.commit()
 
-    return answer
+    return answer_id

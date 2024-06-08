@@ -88,7 +88,7 @@ async def update_gap_text_question(
 
 @gap_text_question_router.delete(
     "/{gap_text_question_id}",
-    response_model=GapTextQuestionRead,
+    response_model=int,
     operation_id="delete_gap_text_question",
     dependencies=[Depends(require_admin)],
 )
@@ -100,4 +100,4 @@ async def delete_gap_text_question(gap_text_question_id: int):
         session.delete(gap_text_question)
         session.commit()
 
-    return gap_text_question
+    return gap_text_question_id

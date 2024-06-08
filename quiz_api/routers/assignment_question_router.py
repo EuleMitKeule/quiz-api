@@ -88,7 +88,7 @@ async def update_assignment_question(
 
 @assignment_question_router.delete(
     "/{assignment_question_id}",
-    response_model=AssignmentQuestionRead,
+    response_model=int,
     operation_id="delete_assignment_question",
     dependencies=[Depends(require_admin)],
 )
@@ -100,4 +100,4 @@ async def delete_assignment_question(assignment_question_id: int):
         session.delete(assignment_question)
         session.commit()
 
-    return assignment_question
+    return assignment_question_id

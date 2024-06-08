@@ -88,7 +88,7 @@ async def update_assignment_option(
 
 @assignment_option_router.delete(
     "/{assignment_option_id}",
-    response_model=AssignmentOptionRead,
+    response_model=int,
     operation_id="delete_assignment_option",
     dependencies=[Depends(require_admin)],
 )
@@ -100,4 +100,4 @@ async def delete_assignment_option(assignment_option_id: int):
         session.delete(assignment_option)
         session.commit()
 
-    return assignment_option
+    return assignment_option_id

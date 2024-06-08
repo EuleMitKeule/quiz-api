@@ -46,7 +46,7 @@ async def get_single_choice_option(option_id: int):
 
 @single_choice_option_router.post(
     "",
-    response_model=SingleChoiceOptionCreate,
+    response_model=SingleChoiceOptionRead,
     operation_id="create_single_choice_option",
     dependencies=[Depends(require_admin)],
 )
@@ -87,7 +87,7 @@ async def update_single_choice_option(option_id: int, option: SingleChoiceOption
 
 @single_choice_option_router.delete(
     "/{option_id}",
-    response_model=SingleChoiceOptionRead,
+    response_model=int,
     operation_id="delete_single_choice_option",
     dependencies=[Depends(require_admin)],
 )
@@ -99,4 +99,4 @@ async def delete_single_choice_option(option_id: int):
         session.delete(option)
         session.commit()
 
-    return option
+    return option_id

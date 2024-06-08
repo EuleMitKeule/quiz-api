@@ -108,7 +108,7 @@ async def update_result(
 
 @result_router.delete(
     "/{result_id}",
-    response_model=ResultRead,
+    response_model=int,
     operation_id="delete_result",
 )
 async def delete_result(
@@ -126,4 +126,4 @@ async def delete_result(
         session.delete(result)
         session.commit()
 
-    return result
+    return result_id

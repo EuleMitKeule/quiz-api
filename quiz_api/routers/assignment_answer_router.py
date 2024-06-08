@@ -46,7 +46,7 @@ async def get_assignment_answer(answer_id: int):
 
 @assignment_answer_router.post(
     "",
-    response_model=AssignmentAnswerCreate,
+    response_model=AssignmentAnswerRead,
     operation_id="create_assignment_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -86,7 +86,7 @@ async def update_assignment_answer(answer_id: int, answer: AssignmentAnswerCreat
 
 @assignment_answer_router.delete(
     "/{answer_id}",
-    response_model=AssignmentAnswerRead,
+    response_model=int,
     operation_id="delete_assignment_answer",
     dependencies=[Depends(require_admin)],
 )
@@ -98,4 +98,4 @@ async def delete_assignment_answer(answer_id: int):
         session.delete(answer)
         session.commit()
 
-    return answer
+    return answer_id
