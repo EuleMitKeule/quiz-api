@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from sqlalchemy import JSON, Column
 from sqlmodel import Field, Relationship, SQLModel
 
+from quiz_api.const import QuestionDifficulty
+
 
 class HasTitle(SQLModel):
     title: str
@@ -30,6 +32,7 @@ class ResultBase(SQLModel):
 
 class QuestionBase(HasTitle, HasText, HasIndex):
     quiz_id: int | None = Field(default=None, foreign_key="quiz.id")
+    difficulty: QuestionDifficulty = Field(default=QuestionDifficulty.EASY)
 
 
 class AnswerBase(SQLModel):

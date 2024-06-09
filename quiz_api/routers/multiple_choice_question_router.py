@@ -57,6 +57,7 @@ async def create_quiz(question: MultipleChoiceQuestionCreate):
         db_question = MultipleChoiceQuestion.model_validate(question)
         session.add(db_question)
         session.commit()
+        session.refresh(db_question)
 
     return db_question
 

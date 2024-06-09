@@ -1,5 +1,7 @@
 """Constants for the quiz-api application."""
 
+from enum import StrEnum
+
 API_PREFIX = "/api"
 
 DEFAULT_CONFIG_PATH = "config.yml"
@@ -12,6 +14,13 @@ DEFAULT_DB_URL = "sqlite:///quiz-api.db"
 
 CRYPT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+
+class QuestionDifficulty(StrEnum):
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+
 
 LOGGING_CONFIG: dict = {
     "version": 1,
