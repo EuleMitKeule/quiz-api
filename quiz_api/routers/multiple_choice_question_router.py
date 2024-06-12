@@ -25,7 +25,7 @@ async def get_multiple_choice_questions():
     """Get all multiple choice questions."""
 
     with Session(db_engine) as session:
-        questions = session.exec(select(MultipleChoiceQuestion)).all()
+        questions = session.exec(select(MultipleChoiceQuestion)).unique().all()
 
     return questions
 
@@ -79,6 +79,7 @@ async def update_multiple_choice_question(
         db_question.title = question.title
         db_question.text = question.text
         db_question.index = question.index
+        db_question.correct_indices = question.correct_indices
         db_question.quiz_id = question.quiz_id
 
         session.add(db_question)

@@ -214,8 +214,8 @@ async def submit_quiz(
                 question_id=multiple_choice_question.id,
             )
 
-            if set(multiple_choice_answer.selected_indexes) == set(
-                multiple_choice_question.correct_indexes
+            if set(multiple_choice_answer.selected_indices) == set(
+                multiple_choice_question.correct_indices
             ):
                 result.score += 1
                 db_multiple_choice_answer.score = 1

@@ -47,49 +47,53 @@ INSERT INTO
         "text",
         "index",
         quiz_id,
-        correct_index
+        correct_index,
+        difficulty
     )
 VALUES (
         'What principle promotes readability?',
         'Choose the principle that best promotes code readability.',
+        0,
         1,
         1,
-        2
+        "EASY"
     );
 
 -- Insert options for the single choice question (assuming the question has an ID of 1)
 INSERT INTO
     single_choice_option ("text", "index", question_id)
-VALUES ('DRY Principle', 1, 1),
-    ('KISS Principle', 2, 1),
-    ('YAGNI Principle', 3, 1),
-    ('SOLID Principle', 4, 1);
+VALUES ('DRY Principle', 0, 1),
+    ('KISS Principle', 1, 1),
+    ('YAGNI Principle', 2, 1),
+    ('SOLID Principle', 3, 1);
 
 -- -- Create the multiple choice question
--- INSERT INTO
---     multiple_choice_question (
---         title,
---         "text",
---         "index",
---         quiz_id,
---         correct_indices
---     )
--- VALUES (
---         'Which practices are recommended for clean code?',
---         'Select all that apply.',
---         2,
---         1,
---         '[1, 3, 4]'
---     );
+INSERT INTO
+    multiple_choice_question (
+        title,
+        "text",
+        "index",
+        quiz_id,
+        correct_indices,
+        difficulty
+    )
+VALUES (
+        'Which practices are recommended for clean code?',
+        'Select all that apply.',
+        2,
+        1,
+        '[1, 2]',
+        "MEDIUM"
+    );
 
 -- -- Insert options for the multiple choice question (assuming the question has an ID of 2)
--- INSERT INTO
---     multiple_choice_option ("text", "index", question_id)
--- VALUES (
---         'Using meaningful names',
---         1,
---         2
---     ),
---     ('Skipping code reviews', 2, 2),
---     ('Refactoring regularly', 3, 2),
---     ('Writing unit tests', 4, 2);
+INSERT INTO
+    multiple_choice_option ("text", "index", question_id)
+VALUES (
+        'Using meaningful names',
+        0,
+        2
+    ),
+    ('Skipping code reviews', 1, 1),
+    ('Refactoring regularly', 2, 1),
+    ('Writing unit tests', 3, 1);
