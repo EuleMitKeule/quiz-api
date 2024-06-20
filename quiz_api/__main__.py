@@ -21,6 +21,7 @@ from quiz_api.routers.gap_text_answer_router import gap_text_answer_router
 from quiz_api.routers.gap_text_option_router import gap_text_option_router
 from quiz_api.routers.gap_text_question_router import gap_text_question_router
 from quiz_api.routers.gap_text_sub_question_router import gap_text_sub_question_router
+from quiz_api.routers.label_router import label_router
 from quiz_api.routers.multiple_choice_answer_router import multiple_choice_answer_router
 from quiz_api.routers.multiple_choice_option_router import multiple_choice_option_router
 from quiz_api.routers.multiple_choice_question_router import (
@@ -185,6 +186,9 @@ app.include_router(
     assignment_answer_router,
     prefix=API_PREFIX,
     dependencies=[Depends(get_current_user)],
+)
+app.include_router(
+    label_router, prefix=API_PREFIX, dependencies=[Depends(get_current_user)]
 )
 
 

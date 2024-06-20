@@ -124,6 +124,17 @@ class UserBase(SQLModel):
     is_admin: bool
 
 
+class LabelBase(SQLModel):
+    text: str = Field(index=True, unique=True)
+
+
+class QuizLabelRelation(SQLModel, table=True):
+    __tablename__ = "quiz_label_relation"
+
+    quiz_id: int | None = Field(default=None, foreign_key="quiz.id", primary_key=True)
+    label_id: int | None = Field(default=None, foreign_key="label.id", primary_key=True)
+
+
 class Quiz(QuizBase, table=True):
     __tablename__ = "quiz"
 
@@ -142,6 +153,11 @@ class Quiz(QuizBase, table=True):
     )
     gap_text_questions: List["GapTextQuestion"] = Relationship(
         sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    labels: List["Label"] = Relationship(
+        back_populates="quizzes",
+        sa_relationship_kwargs={"lazy": "selectin"},
+        link_model=QuizLabelRelation,
     )
 
 
@@ -320,6 +336,17 @@ class User(UserBase, table=True):
     hashed_password: str
 
 
+class Label(LabelBase, table=True):
+    __tablename__ = "label"
+
+    id: int = Field(default=None, primary_key=True)
+    quizzes: List["Quiz"] = Relationship(
+        back_populates="labels",
+        sa_relationship_kwargs={"lazy": "selectin"},
+        link_model=QuizLabelRelation,
+    )
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -407,6 +434,10 @@ class UserCreate(UserBase):
     pass
 
 
+class LabelCreate(LabelBase):
+    quiz_ids: List[int] = []
+
+
 class QuizRead(QuizBase):
     id: int
     single_choice_questions: List["SingleChoiceQuestionRead"] = []
@@ -414,6 +445,7 @@ class QuizRead(QuizBase):
     open_questions: List["OpenQuestionRead"] = []
     assignment_questions: List["AssignmentQuestionRead"] = []
     gap_text_questions: List["GapTextQuestionRead"] = []
+    labels: List["LabelReadWithoutQuizzes"] = []
 
 
 class ResultRead(ResultBase):
@@ -507,6 +539,15 @@ class GapTextAnswerRead(AnswerRead, GapTextAnswerBase):
 class UserRead(UserBase):
     id: int
     results: List["ResultRead"] = []
+
+
+class LabelReadWithoutQuizzes(LabelBase):
+    id: int
+
+
+class LabelRead(LabelReadWithoutQuizzes):
+    id: int
+    quizzes: List["QuizRead"] = []
 
 
 class Answers(BaseModel):
