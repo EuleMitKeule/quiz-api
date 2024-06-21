@@ -346,6 +346,10 @@ class Label(LabelBase, table=True):
         link_model=QuizLabelRelation,
     )
 
+    @property
+    def quiz_ids(self) -> List[int]:
+        return [quiz.id for quiz in self.quizzes]
+
 
 class Token(BaseModel):
     access_token: str
@@ -445,7 +449,7 @@ class QuizRead(QuizBase):
     open_questions: List["OpenQuestionRead"] = []
     assignment_questions: List["AssignmentQuestionRead"] = []
     gap_text_questions: List["GapTextQuestionRead"] = []
-    labels: List["LabelReadWithoutQuizzes"] = []
+    labels: List["LabelRead"] = []
 
 
 class ResultRead(ResultBase):
@@ -541,13 +545,9 @@ class UserRead(UserBase):
     results: List["ResultRead"] = []
 
 
-class LabelReadWithoutQuizzes(LabelBase):
+class LabelRead(LabelBase):
     id: int
-
-
-class LabelRead(LabelReadWithoutQuizzes):
-    id: int
-    quizzes: List["QuizRead"] = []
+    quiz_ids: List[int] = []
 
 
 class Answers(BaseModel):

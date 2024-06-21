@@ -41,6 +41,10 @@ async def get_quizzes():
     with Session(db_engine) as session:
         quizzes = session.exec(select(Quiz)).unique().all()
 
+        for quiz in quizzes:
+            for label in quiz.labels:
+                session.refresh(label)
+
     return quizzes
 
 
@@ -54,6 +58,9 @@ async def get_quiz(quiz_id: int):
 
     with Session(db_engine) as session:
         quiz = session.get(Quiz, quiz_id)
+
+        for label in quiz.labels:
+            session.refresh(label)
 
     return quiz
 
