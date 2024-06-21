@@ -80,9 +80,9 @@ INSERT INTO
 VALUES (
         'Which practices are recommended for clean code?',
         'Select all that apply.',
-        2,
         1,
-        '[1, 2]',
+        1,
+        '[0, 2, 3]',
         "MEDIUM"
     );
 
@@ -92,7 +92,7 @@ INSERT INTO
 VALUES (
         'Using meaningful names',
         0,
-        2
+        1
     ),
     ('Skipping code reviews', 1, 1),
     ('Refactoring regularly', 2, 1),
