@@ -127,6 +127,9 @@ async def update_label(label_id: int, label: LabelCreate):
         for db_quiz in db_quizzes:
             session.refresh(db_quiz)
 
+        for quiz in db_label.quizzes:
+            session.refresh(quiz)
+
     return db_label
 
 
@@ -148,7 +151,13 @@ async def delete_label(label_id: int):
                 detail=f"Label with ID {label_id} not found.",
             )
 
+        for quiz in db_label.quizzes:
+            session.refresh(quiz)
+
         session.delete(db_label)
         session.commit()
+
+        for quiz in db_label.quizzes:
+            session.refresh(quiz)
 
     return label_id

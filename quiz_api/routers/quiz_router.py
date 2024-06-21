@@ -80,6 +80,9 @@ async def create_quiz(quiz: QuizCreate):
         session.commit()
         session.refresh(db_quiz)
 
+        for label in db_quiz.labels:
+            session.refresh(label)
+
     return db_quiz
 
 
@@ -100,6 +103,9 @@ async def update_quiz(quiz_id: int, quiz: QuizCreate):
         session.add(db_quiz)
         session.commit()
         session.refresh(db_quiz)
+
+        for label in db_quiz.labels:
+            session.refresh(label)
 
     return db_quiz
 
