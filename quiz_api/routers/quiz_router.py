@@ -128,6 +128,12 @@ async def delete_quiz(quiz_id: int):
             .all()
         )
 
+        for label in quiz.labels:
+            session.refresh(label)
+
+            if len(label.quizzes) == 1:
+                session.delete(label)
+
         for result in results:
             for single_choice_answer in result.single_choice_answers:
                 session.delete(single_choice_answer)
