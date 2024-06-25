@@ -210,15 +210,23 @@ async def submit_quiz(
                 question_id=single_choice_question.id,
             )
 
+            score = (
+                1
+                if single_choice_question.difficulty == "easy"
+                else 2
+                if single_choice_question.difficulty == "medium"
+                else 3
+            )
+
             if (
                 single_choice_answer.selected_index
                 == single_choice_question.correct_index
             ):
-                result.score += 1
-                db_single_choice_answer.score = 1
+                result.score += score
+                db_single_choice_answer.score = score
 
-            db_single_choice_answer.max_score = 1
-            result.max_score += 1
+            db_single_choice_answer.max_score = score
+            result.max_score += score
 
             session.add(db_single_choice_answer)
 
@@ -233,14 +241,22 @@ async def submit_quiz(
                 question_id=multiple_choice_question.id,
             )
 
+            score = (
+                1
+                if multiple_choice_question.difficulty == "easy"
+                else 2
+                if multiple_choice_question.difficulty == "medium"
+                else 3
+            )
+
             if set(multiple_choice_answer.selected_indices) == set(
                 multiple_choice_question.correct_indices
             ):
-                result.score += 1
-                db_multiple_choice_answer.score = 1
+                result.score += score
+                db_multiple_choice_answer.score = score
 
-            db_multiple_choice_answer.max_score = 1
-            result.max_score += 1
+            db_multiple_choice_answer.max_score = score
+            result.max_score += score
 
             session.add(db_multiple_choice_answer)
 
@@ -253,17 +269,25 @@ async def submit_quiz(
                 question_id=open_question.id,
             )
 
+            score = (
+                1
+                if open_question.difficulty == "easy"
+                else 2
+                if open_question.difficulty == "medium"
+                else 3
+            )
+
             if all(
                 [
                     open_option.text.lower() in open_answer.text.lower()
                     for open_option in open_question.open_options
                 ]
             ):
-                result.score += 1
-                db_open_answer.score = 1
+                result.score += score
+                db_open_answer.score = score
 
-            db_open_answer.max_score = 1
-            result.max_score += 1
+            db_open_answer.max_score = score
+            result.max_score += score
 
             session.add(db_open_answer)
 
@@ -278,12 +302,24 @@ async def submit_quiz(
                 question_id=gap_text_question.id,
             )
 
-            if gap_text_answer.selected_indices == gap_text_question.correct_indices:
-                result.score += 1
-                db_gap_text_answer.score = 1
+            score = (
+                1
+                if gap_text_question.difficulty == "easy"
+                else 2
+                if gap_text_question.difficulty == "medium"
+                else 3
+            )
 
-            db_gap_text_answer.max_score = 1
-            result.max_score += 1
+            if gap_text_answer.selected_indices == gap_text_question.correct_indices:
+                result.score += score * len(gap_text_question.correct_indices)
+                db_gap_text_answer.score = score * len(
+                    gap_text_question.correct_indices
+                )
+
+            db_gap_text_answer.max_score = score * len(
+                gap_text_question.correct_indices
+            )
+            result.max_score += score * len(gap_text_question.correct_indices)
 
             session.add(db_gap_text_answer)
 
@@ -298,15 +334,23 @@ async def submit_quiz(
                 question_id=assignment_question.id,
             )
 
+            score = (
+                1
+                if assignment_question.difficulty == "easy"
+                else 2
+                if assignment_question.difficulty == "medium"
+                else 3
+            )
+
             if (
                 assignment_answer.selected_indices
                 == assignment_question.correct_indices
             ):
-                result.score += 1
-                db_assignment_answer.score = 1
+                result.score += score
+                db_assignment_answer.score = score
 
-            db_assignment_answer.max_score = 1
-            result.max_score += 1
+            db_assignment_answer.max_score = score
+            result.max_score += score
 
             session.add(db_assignment_answer)
 
