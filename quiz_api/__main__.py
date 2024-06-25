@@ -35,6 +35,7 @@ from quiz_api.routers.result_router import result_router
 from quiz_api.routers.single_choice_answer_router import single_choice_answer_router
 from quiz_api.routers.single_choice_option_router import single_choice_option_router
 from quiz_api.routers.single_choice_question_router import single_choice_question_router
+from quiz_api.routers.user_router import user_router
 from quiz_api.security import get_current_user, get_password_hash, get_user
 
 
@@ -105,6 +106,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="quiz-api", lifespan=lifespan)
 
 app.include_router(auth_router, prefix=API_PREFIX)
+app.include_router(
+    user_router, prefix=API_PREFIX, dependencies=[Depends(get_current_user)]
+)
 app.include_router(
     quiz_router, prefix=API_PREFIX, dependencies=[Depends(get_current_user)]
 )
