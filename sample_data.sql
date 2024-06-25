@@ -786,7 +786,6 @@ VALUES (
         'EASY'
     );
 
--- Options for the question
 INSERT INTO
     multiple_choice_option (
         "id",
