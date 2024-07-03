@@ -46,6 +46,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting application.")
 
     Database.create_db()
+    Database.run_migrations()
 
     test_user = get_user(config.test_username)
     test_password_hash = get_password_hash(config.test_password)

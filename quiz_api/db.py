@@ -1,5 +1,7 @@
 """Database for the quiz-api application."""
 
+from alembic import command
+from alembic.config import Config
 from sqlmodel import Session, SQLModel, create_engine
 
 from quiz_api.config import config
@@ -28,3 +30,13 @@ class Database:
         with Session(db_engine) as session:
             SQLModel.metadata.drop_all(db_engine)
             session.commit()
+
+    @staticmethod
+    def run_migrations():
+        """Run database migrations."""
+
+        logger.info("Running database migrations.")
+
+        alembic_cfg = Config("alembic.ini")
+        alembic_cfg.set_main_option("sqlalchemy.url", config.db_url)
+        command.upgrade(alembic_cfg, "head")
