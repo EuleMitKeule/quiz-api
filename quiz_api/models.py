@@ -21,7 +21,7 @@ class HasIndex(SQLModel):
 
 
 class QuizBase(HasTitle):
-    pass
+    is_practice: bool = Field(default=False)
 
 
 class ResultBase(SQLModel):
