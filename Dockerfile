@@ -5,6 +5,8 @@ WORKDIR /app
 COPY pyproject.toml pyproject.toml
 COPY README.md README.md
 COPY quiz_api quiz_api
+COPY alembic.ini alembic.ini
+COPY migrations migrations
 COPY unit-config.json /docker-entrypoint.d/config.json
 
 RUN pip3 install poetry
