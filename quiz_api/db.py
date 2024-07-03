@@ -1,5 +1,7 @@
 """Database for the quiz-api application."""
 
+import os
+
 from alembic import command
 from alembic.config import Config
 from sqlmodel import Session, SQLModel, create_engine
@@ -38,6 +40,8 @@ class Database:
         logger.info("Running database migrations.")
 
         alembic_cfg = Config()
-        alembic_cfg.set_main_option("script_location", "quiz_api/migrations")
+        alembic_cfg.set_main_option(
+            "script_location", f"{os.path.dirname(__file__)}/migrations"
+        )
         alembic_cfg.set_main_option("sqlalchemy.url", config.db_url)
         command.upgrade(alembic_cfg, "head")
