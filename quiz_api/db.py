@@ -37,6 +37,7 @@ class Database:
 
         logger.info("Running database migrations.")
 
-        alembic_cfg = Config("alembic.ini")
+        alembic_cfg = Config()
+        alembic_cfg.set_main_option("script_location", "quiz_api/migrations")
         alembic_cfg.set_main_option("sqlalchemy.url", config.db_url)
         command.upgrade(alembic_cfg, "head")
