@@ -99,6 +99,7 @@ async def update_quiz(quiz_id: int, quiz: QuizCreate):
         db_quiz = session.get(Quiz, quiz_id)
 
         db_quiz.title = quiz.title
+        db_quiz.is_practice = quiz.is_practice
 
         session.add(db_quiz)
         session.commit()
