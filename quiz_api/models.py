@@ -26,6 +26,7 @@ class QuizBase(HasTitle):
 
 class ResultBase(SQLModel):
     quiz_id: int | None = Field(default=None, foreign_key="quiz.id")
+    user_id: int | None = Field(default=None, foreign_key="user.id")
     score: int = Field(default=0)
     max_score: int = Field(default=0)
 
@@ -165,7 +166,6 @@ class Result(ResultBase, table=True):
     __tablename__ = "result"
 
     id: int | None = Field(default=None, primary_key=True)
-    user_id: int | None = Field(default=None, foreign_key="user.id")
     user: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
     single_choice_answers: List["SingleChoiceAnswer"] = Relationship(
         sa_relationship_kwargs={"lazy": "selectin"}
