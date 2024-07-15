@@ -19,7 +19,7 @@ async def read_users_me(
 
 @user_router.get(
     "/",
-    response_model=UserRead,
+    response_model=list[UserRead],
     operation_id="read_users",
     dependencies=[Depends(require_admin)],
 )
