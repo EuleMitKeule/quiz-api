@@ -21,7 +21,6 @@ async def read_users_me(
     "/",
     response_model=list[UserRead],
     operation_id="read_users",
-    dependencies=[Depends(require_admin)],
 )
 async def read_users():
     with Session(db_engine) as session:
