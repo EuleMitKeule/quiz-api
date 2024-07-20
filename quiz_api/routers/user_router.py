@@ -18,7 +18,7 @@ async def read_users_me(
 
 
 @user_router.get(
-    "/",
+    "",
     response_model=list[UserRead],
     operation_id="read_users",
 )
@@ -43,7 +43,7 @@ async def read_user(user_id: int):
 
 
 @user_router.post(
-    "/",
+    "",
     response_model=UserRead,
     operation_id="create_user",
     dependencies=[Depends(require_admin)],
