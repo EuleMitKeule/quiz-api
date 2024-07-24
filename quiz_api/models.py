@@ -434,8 +434,7 @@ class GapTextAnswerCreate(GapTextAnswerBase):
 
 
 class UserCreate(UserBase):
-    hashed_password: str
-    pass
+    password: str | None = None
 
 
 class LabelCreate(LabelBase):
