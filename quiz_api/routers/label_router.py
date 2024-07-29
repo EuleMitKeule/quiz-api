@@ -161,3 +161,38 @@ async def delete_label(label_id: int):
             session.refresh(quiz)
 
     return label_id
+
+
+@label_router.delete(
+    "/{label_id}/quiz/{quiz_id}",
+    operation_id="delete_label_quiz",
+    dependencies=[Depends(require_admin)],
+)
+async def delete_label_quiz(label_id: int, quiz_id: int):
+    """Delete a quiz from a label by ID."""
+
+    with Session(db_engine) as session:
+        db_label = session.get(Label, label_id)
+
+        if db_label is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Label with ID {label_id} not found.",
+            )
+
+        db_quiz = session.get(Quiz, quiz_id)
+
+        if db_quiz is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Quiz with ID {quiz_id} not found.",
+            )
+
+        db_label.quizzes.remove(db_quiz)
+
+        if len(db_label.quizzes) == 0:
+            session.delete(db_label)
+        else:
+            session.add(db_label)
+
+        session.commit()
